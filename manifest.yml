@@ -1,5 +1,5 @@
 applications:
 - name: sandhikhan-node-app
-memory: 128M
+memory: 512M
 command: node app.js
 buildpack: https://github.com/cloudfoundry/nodejs-buildpack

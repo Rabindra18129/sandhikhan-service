@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-var connection = mysql.createConnection({
+var pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -7,25 +7,25 @@ var connection = mysql.createConnection({
 });
 
 function handleDisconnect() {
-    connection = mysql.createConnection({
+    pool = mysql.createPool({
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME
     });
-    connection.on('error', function(err) {
+    pool.on('error', function(err) {
         console.log('db error', err);
         handleDisconnect();
     });
 }
-connection.on('error', function(err) {
+pool.on('error', function(err) {
     console.log('db error', err);
     handleDisconnect();
 });
 
 function executeQuery(query, params) {
     return new Promise((resolve, reject) => {
-        connection.query({ sql: query, values: params }, (err, result, fields) => {
+        pool.query({ sql: query, values: params }, (err, result, fields) => {
             if (err) {
                 console.log('Error occured while executing query');
                 console.log(err);

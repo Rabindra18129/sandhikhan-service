@@ -8,10 +8,11 @@ class IssueClient {
     }
 
     async getCurrentIssue() {
-        let issueQuery = 'SELECT * FROM ad_adce71ce2869f65.current_issue';
+        let issueQuery = 'call getCurrentIssue();';
         try {
             let dbResponse = await dbReader.getDBData(issueQuery, null);
-            this.issue = dbResponse.dbData;
+            this.issue = dbResponse.dbData[0];
+
             this.issue.articleDetails = await this.getArticleByIssueId(this.issue.issue_id);
             this.issue.editorialDetails = await this.getEditorialByIssueId(this.issue.issue_id);
             return this.issue;
@@ -23,8 +24,29 @@ class IssueClient {
 
     }
 
+    async getIssueById(issueId) {
+        let issueQuery = 'call getIssueById(?);';
+        try {
+            let dbResponse = await dbReader.getDBData(issueQuery, [issueId]);
+            if (dbResponse.dbData.length >= 1) {
+                this.issue = dbResponse.dbData[0];
+                this.issue.articleDetails = await this.getArticleByIssueId(this.issue.issue_id);
+                this.issue.editorialDetails = await this.getEditorialByIssueId(this.issue.issue_id);
+                return this.issue;
+            } else {
+                throw new Error('Issue not found');
+            }
+            return dbResponse;
+
+        } catch (error) {
+            console.log('Error Occured while fetching issue');
+            console.log(error.message);
+            throw error;
+        }
+    }
+
     async getArticleByIssueId(issueId) {
-        let articleQuery = 'call ad_adce71ce2869f65.getArticleDetailsByIssueID(?)';
+        let articleQuery = 'call getArticleDetailsByIssueID(?)';
         try {
             let dbResponse = await dbReader.getDBData(articleQuery, [issueId]);
             return dbResponse.dbData;
@@ -35,7 +57,7 @@ class IssueClient {
     }
 
     async getEditorialByIssueId(issueId) {
-        let editorialQuery = 'call ad_adce71ce2869f65.getEditorialDetailsByIssueId(?)';
+        let editorialQuery = 'call getEditorialDetailsByIssueId(?)';
         try {
             let dbResponse = await dbReader.getDBData(editorialQuery, [issueId]);
             return dbResponse.dbData;
