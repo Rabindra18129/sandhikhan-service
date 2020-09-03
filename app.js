@@ -1,4 +1,5 @@
-require('dotenv').config();
+if (process.env.NODE_ENV && process.env.NODE_ENV == 'DEV')
+    require('dotenv').config();
 var app = require('express')();
 var path = require('path');
 var cors = require('cors')
