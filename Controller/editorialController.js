@@ -1,5 +1,4 @@
 var dbReader = require('../Helper/dbReader');
-var awsHelper = require('../Helper/awsHelper');
 var fileReaderHelper = require('../Helper/filereader');
 class EditorialClient {
     constructor(id) {
