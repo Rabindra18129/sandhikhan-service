@@ -10,4 +10,15 @@ archiveRouter.get('/issue/:pageNum', async(req, res, next) => {
         next(error);
     }
 });
+
+archiveRouter.get('/webexclusive/:pageNum', async(req, res, next) => {
+    try {
+        let archiveClient = new ArchiveClient();
+        let archiveData = await archiveClient.getWebExclusiveByPage(req.params['pageNum']);
+        res.status(200).json(archiveData);
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+});
 module.exports = archiveRouter;

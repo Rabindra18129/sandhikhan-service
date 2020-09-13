@@ -10,7 +10,6 @@ var articleRouter = require('./Router/articleRouter');
 var editorialRouter = require('./Router/editorialRouter');
 var archiveRouter = require('./Router/archiveRouter');
 process.env.SANDHIKHAN_DATA_DIR = path.join(__dirname, process.env.SANDHIKHAN_DATA_PATH);
-console.log(process.env.SANDHIKHAN_DATA_DIR);
 app.use(cors());
 app.use(logger);
 
@@ -25,7 +24,7 @@ app.use((req, res, next) => {
 });
 //error handler middleware
 app.use((err, req, res, next) => {
-    res.status(500).send('Internal Server occured. Failed to process request');
+    res.status(500).send('Internal Server error occured. Failed to process request');
 });
 
 app.listen(port, () => {

@@ -9,7 +9,7 @@ class ArchiveClient {
         let issueArchiveQuery = 'call u900846496_snadhikhan_db.getIssueByPage(?);';
         try {
             let dbResponse = await dbReader.getDBData(issueArchiveQuery, [pageId]);
-            issueArchive.recordCount = await this.getRecordCount();
+            issueArchive.recordCount = await this.getRecordCount('issue');
             if (dbResponse.dbData.length >= 1) {
                 issueArchive.issues = dbResponse.dbData;
                 for (let i = 0; i < issueArchive.issues.length; i++) {
@@ -37,8 +37,8 @@ class ArchiveClient {
         }
 
     }
-    async getRecordCount() {
-        let recordCountQuery = 'call getTotalIssueCount();'
+    async getRecordCount(type) {
+        let recordCountQuery = type == 'issue' ? 'call getTotalIssueCount();' : 'call getTotalWebExclusiveCount();';
         try {
             let dbResponse = await dbReader.getDBData(recordCountQuery, null);
             if (dbResponse.dbData.length >= 1) {
@@ -50,12 +50,32 @@ class ArchiveClient {
             throw error;
         }
     }
+
     async getEditorialByIssueId(issueId) {
         let editorialQuery = 'call getEditorialDetailsByIssueId(?)';
         try {
             let dbResponse = await dbReader.getDBData(editorialQuery, [issueId]);
             return dbResponse.dbData;
         } catch (error) {
+            throw error;
+        }
+
+    }
+    async getWebExclusiveByPage(pageId) {
+        try {
+            pageId = parseInt(pageId) * 10 - 10;
+            let webExclusiveArchive = {};
+            let webExclusiveArchiveQuery = 'call u900846496_snadhikhan_db.getWebExclusiveByPage(?);';
+            let dbResponse = await dbReader.getDBData(webExclusiveArchiveQuery, [pageId]);
+            webExclusiveArchive.recordCount = await this.getRecordCount('webExclusive');
+            if (dbResponse.dbData.length >= 1) {
+                webExclusiveArchive.webExclusives = dbResponse.dbData;
+                return webExclusiveArchive;
+            } else {
+                throw new Error('No record Found!');
+            }
+        } catch (error) {
+            console.log(error.message);
             throw error;
         }
 
