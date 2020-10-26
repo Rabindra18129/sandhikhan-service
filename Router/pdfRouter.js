@@ -23,6 +23,17 @@ pdfArchiveRouter.get('/pdflist/:pagenum', async(req, res, next) => {
         next(error);
     }
 });
+pdfArchiveRouter.get('/view/pdfissue/:filename', async(req, res, next) => {
+    try {
+        let pdfArchiveClient = new PDFArchiveClient();
+        let fileData = await pdfArchiveClient.downloadIssue(req.params['filename']);
+        res.setHeader('Content-type', 'application/pdf');
+        fileData.pipe(res);
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+});
 pdfArchiveRouter.get('/download/pdfissue/:filename', async(req, res, next) => {
     try {
         let pdfArchiveClient = new PDFArchiveClient();
