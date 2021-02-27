@@ -10,7 +10,16 @@ archiveRouter.get('/issue/:pageNum', async(req, res, next) => {
         next(error);
     }
 });
-
+archiveRouter.get('/count/:type', async(req, res, next) => {
+    try {
+        let archiveClient = new ArchiveClient();
+        let totalRecordCount = await archiveClient.getRecordCount(req.params['type']);
+        res.status(200).json(totalRecordCount);
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+});
 archiveRouter.get('/webexclusive/:pageNum', async(req, res, next) => {
     try {
         let archiveClient = new ArchiveClient();

@@ -63,11 +63,10 @@ class ArchiveClient {
     }
     async getWebExclusiveByPage(pageId) {
         try {
-            pageId = parseInt(pageId) * 10 - 10;
+            pageId = parseInt(pageId);
             let webExclusiveArchive = {};
             let webExclusiveArchiveQuery = 'call u900846496_snadhikhan_db.getWebExclusiveByPage(?);';
             let dbResponse = await dbReader.getDBData(webExclusiveArchiveQuery, [pageId]);
-            webExclusiveArchive.recordCount = await this.getRecordCount('webExclusive');
             if (dbResponse.dbData.length >= 1) {
                 webExclusiveArchive.webExclusives = dbResponse.dbData;
                 return webExclusiveArchive;
