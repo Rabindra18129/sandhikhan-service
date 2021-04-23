@@ -1,7 +1,8 @@
 var dbReader = require('../Helper/dbReader');
+var getDayDiff = require('../Helper/dateHelper');
 class ArchiveClient {
     constructor() {
-
+        this.dayDiffCount = process.env.DAY_DIFF;
     }
     async getIssueByPage(pageId) {
         pageId = parseInt(pageId) * 10 - 10;
@@ -15,6 +16,8 @@ class ArchiveClient {
                 for (let i = 0; i < issueArchive.issues.length; i++) {
                     issueArchive.issues[i].articleDetails = await this.getArticleByIssueId(issueArchive.issues[i].issue_id);
                     issueArchive.issues[i].editorialDetails = await this.getEditorialByIssueId(issueArchive.issues[i].issue_id);
+                    const dayDiff = issueArchive.issues[i].issue_date ? getDayDiff(issueArchive.issues[i].issue_date) : 121;
+                    issueArchive.issues[i].isNew = this.dayDiffCount - dayDiff >= 0 ? true : false;
                 }
                 return issueArchive;
             } else {

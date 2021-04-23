@@ -1,9 +1,11 @@
 var dbReader = require('../Helper/dbReader');
+var getDayDiff = require('../Helper/dateHelper');
 
 
 class IssueClient {
     constructor() {
         this.issue = {};
+        this.dayDiffCount = process.env.DAY_DIFF;
 
     }
 
@@ -15,6 +17,9 @@ class IssueClient {
 
             this.issue.articleDetails = await this.getArticleByIssueId(this.issue.issue_id);
             this.issue.editorialDetails = await this.getEditorialByIssueId(this.issue.issue_id);
+            const dayDiff = this.issue.issue_date ? getDayDiff(this.issue.issue_date) : 121;
+            this.issue.isNew = this.dayDiffCount - dayDiff >= 0 ? true : false;
+
             return this.issue;
         } catch (error) {
             console.log('Erorr occured while getting current issue');
@@ -32,6 +37,8 @@ class IssueClient {
                 this.issue = dbResponse.dbData[0];
                 this.issue.articleDetails = await this.getArticleByIssueId(this.issue.issue_id);
                 this.issue.editorialDetails = await this.getEditorialByIssueId(this.issue.issue_id);
+                const dayDiff = this.issue.issue_date ? getDayDiff(this.issue.issue_date) : 121;
+                this.issue.isNew = this.dayDiffCount - dayDiff >= 0 ? true : false;
                 return this.issue;
             } else {
                 throw new Error('Issue not found');
