@@ -3,6 +3,7 @@ var getDayDiff = require('../Helper/dateHelper');
 class ArchiveClient {
     constructor() {
         this.dayDiffCount = process.env.DAY_DIFF;
+        this.dayDiffCountWE = process.env.DAY_DIFF_WE;
     }
     async getIssueByPage(pageId) {
         pageId = parseInt(pageId) * 10 - 10;
@@ -72,6 +73,11 @@ class ArchiveClient {
             let dbResponse = await dbReader.getDBData(webExclusiveArchiveQuery, [pageId]);
             if (dbResponse.dbData.length >= 1) {
                 webExclusiveArchive.webExclusives = dbResponse.dbData;
+                webExclusiveArchive.webExclusives.forEach(element => {
+                    let dayDiff = element.publish_date ? getDayDiff(element.publish_date) : 46;
+                    element.isNew = this.dayDiffCount - dayDiff >= 0 ? true : false;
+                });
+                console.log(webExclusiveArchive);
                 return webExclusiveArchive;
             } else {
                 throw new Error('No record Found!');
