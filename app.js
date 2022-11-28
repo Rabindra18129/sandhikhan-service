@@ -1,8 +1,8 @@
-if (process.env.NODE_ENV && process.env.NODE_ENV == 'DEV')
-    require('dotenv').config();
+require('dotenv').config();   
 var app = require('express')();
 var path = require('path');
-var cors = require('cors')
+var cors = require('cors');
+var cacheHandler=require('./util/requestCache');
 var port = process.env.PORT || 3000;
 var webExclusiveRouter = require('./Router/webExclusiveRouter');
 var issueRouter = require('./Router/issueRouter');
@@ -15,11 +15,11 @@ app.use(cors());
 app.use(logger);
 
 app.use('/webexclusive', webExclusiveRouter);
-app.use('/issue', issueRouter);
+app.use('/issue', issueRouter(cacheHandler));
 app.use('/article', articleRouter);
 app.use('/editorial', editorialRouter);
 app.use('/archive', archiveRouter);
-app.use('/pdfarchive', pdfArchiveRouter);
+app.use('/pdfarchive', pdfArchiveRouter(cacheHandler));
 //wild route handler
 app.use((req, res, next) => {
     res.status(404).send('Not Found!');
