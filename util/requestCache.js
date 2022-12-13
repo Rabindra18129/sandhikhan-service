@@ -21,6 +21,9 @@ class RequestCache {
         },this.cacheResetTimer)
 
     }
+    clearCahche(){
+        this.cacheData.clear();
+    }
 
 }
 module.exports=new RequestCache();

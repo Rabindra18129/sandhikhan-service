@@ -3,4 +3,5 @@ node_modules
 awsConfig.js
 config.bat
 manifest.yml
+package-lock.json
 .vscode

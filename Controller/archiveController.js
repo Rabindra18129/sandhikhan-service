@@ -77,7 +77,6 @@ class ArchiveClient {
                     let dayDiff = element.publish_date ? getDayDiff(element.publish_date) : 46;
                     element.isNew = this.dayDiffCount - dayDiff >= 0 ? true : false;
                 });
-                console.log(webExclusiveArchive);
                 return webExclusiveArchive;
             } else {
                 throw new Error('No record Found!');
