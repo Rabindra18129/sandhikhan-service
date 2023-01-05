@@ -10,9 +10,9 @@ function intialize(cacheHandler){
         } else {
             try {
                 let bookList=await bookClient.getAllBooks();
-                res.status(200).json(bookList?.dbData);
-                if(bookList?.dbData.length>0)
-                cacheHandler.addData(req.url,bookList?.dbData);
+                res.status(200).json(bookList.dbData);
+                if(bookList.dbData.length>0)
+                cacheHandler.addData(req.url,bookList.dbData);
             } catch (error) {
                 next(error);
             }
@@ -28,9 +28,9 @@ function intialize(cacheHandler){
         } else {
             try {
                 let bookDetails=await bookClient.getBookDetails(bookID);
-                res.status(200).json(bookDetails?.dbData);
-                if(bookDetails?.dbData.length>0)
-                cacheHandler.addData(req.url,bookDetails?.dbData);
+                res.status(200).json(bookDetails.dbData);
+                if(bookDetails.dbData.length>0)
+                cacheHandler.addData(req.url,bookDetails.dbData);
             } catch (error) {
                 next(error);
             }
